@@ -1,18 +1,218 @@
-DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>derivscanner.ke - GOLD</title>
 <style>
-:root{
-  --main:#FFD700;      /* GOLD */
-  --accent:#FFD700;
-  --bg:#000000;        /* BLACK */
-  --box:#111111;
-}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:#fff;font-family:Arial;padding:10px}
+body{background:#000;color:#fff;font-family:Arial;padding:10px}
 .top{background:linear-gradient(135deg,#FFD700,#B8860B);color:#000;border-radius:16px;padding:18px;text-align:center;border:2px solid #FFD700}
 .top h1{font-size:30px;letter-spacing:2px;font-weight:900}
 .top h1 span{color:#fff;-webkit-text-stroke:1px #000}
-.top p{font-size:11px;font-weight:800;letter-spacing:1px}
-.box{background:var(--box);border:1px solid #333;border-radius:14px;padding:14px;margin:10px 0}
-.btn
+.top p{font-size:11px;font-weight:800}
+.box{background:#111;border:1px solid #333;border-radius:14px;padding:14px;margin:10px 0}
+.btn{background:#FFD700;color:#000;font-weight:900;padding:14px;border:none;border-radius:10px;width:100%;font-size:16px;margin-top:8px}
+.btn2{background:#1a1a1a;color:#FFD700;border:1px solid #FFD700}
+select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #FFD700;background:#1a1a1a;color:#fff;margin-top:8px;text-align:center;font-size:15px}
+.stat{display:flex;gap:8px}
+.stat div{flex:1;background:#1a1a1a;border:1px solid #333;padding:10px;border-radius:10px;text-align:center}
+.signal{font-size:32px;font-weight:900;text-align:center}
+.liveDigit{width:42px;height:42px;line-height:42px;text-align:center;border-radius:10px;font-size:20px;font-weight:900;background:#1a1a1a;border:1px solid #333;display:inline-block;margin:2px}
+.copyBtn{background:#FFD700;color:#000;font-weight:900;padding:16px;border:none;border-radius:12px;width:100%;font-size:18px;margin-top:10px}
+.copyBtn2{background:#fff;color:#000;font-weight:900;padding:12px;border:none;border-radius:10px;width:100%;font-size:14px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- LOGO -->
+<div class="top">
+<div style="font-size:40px">👑</div>
+<h1>deriv<span>scanner</span></h1>
+<p>PROFIT PILOT V12 • GOLD EDITION • AUTO 10 SEC</p>
+<p id="clock" style="font-size:12px;margin-top:4px"></p>
+</div>
+
+<!-- 1. CONTROL BOX -->
+<div class="box">
+<select id="market">
+<option value="R_10">Volatility 10</option>
+<option value="R_25">Volatility 25</option>
+<option value="R_50">Volatility 50</option>
+<option value="R_75" selected>Volatility 75</option>
+<option value="R_100">Volatility 100</option>
+<option value="R_10_1s">Vol 10 (1s)</option>
+<option value="R_25_1s">Vol 25 (1s)</option>
+<option value="R_50_1s">Vol 50 (1s)</option>
+<option value="R_75_1s">Vol 75 (1s)</option>
+<option value="R_100_1s">Vol 100 (1s)</option>
+<option value="BOOM1000">Boom 1000</option>
+<option value="BOOM500">Boom 500</option>
+<option value="CRASH1000">Crash 1000</option>
+<option value="CRASH500">Crash 500</option>
+</select>
+
+<div style="display:flex;gap:8px">
+<input id="mydigit" type="number" min="0" max="9" placeholder="CHOOSE DIGIT 0-9" style="flex:1">
+<button onclick="randomDigit()" style="flex:1;background:#FFD700;color:#000;font-weight:900;border:none;border-radius:10px;margin-top:8px">🎲 RANDOM</button>
+</div>
+
+<label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;color:#FFD700">
+<input type="checkbox" id="auto" checked style="width:20px;height:20px"> AUTO NEW DIGIT EVERY 10 SECONDS
+</label>
+
+<button class="btn" onclick="start()">▶ START PILOT</button>
+<button class="btn btn2" onclick="stop()">⏹ STOP</button>
+</div>
+
+<!-- 2. SCOREBOARD BOX -->
+<div class="box">
+<div class="stat">
+<div><small style="color:#FFD700">WINS</small><div id="wins" style="color:#FFD700;font-size:22px;font-weight:bold">0</div></div>
+<div><small style="color:#888">LOSSES</small><div id="losses" style="color:#ff4444;font-size:22px;font-weight:bold">0</div></div>
+<div><small style="color:#FFD700">WIN RATE</small><div id="rate" style="font-size:22px;font-weight:bold">0%</div></div>
+<div><small style="color:#FFD700">STREAK</small><div id="streak" style="font-size:22px;font-weight:bold">-</div></div>
+</div>
+</div>
+
+<!-- 3. MAIN SIGNAL BOX -->
+<div class="box" style="border:2px solid #FFD700">
+<div id="sig" class="signal">WAITING FOR PILOT</div>
+<div id="sig_info" style="text-align:center;color:#aaa;font-size:13px;margin-top:4px">Choose digit and press START</div>
+
+<!-- COUNTDOWN BOX - YOU CAN SEE IT HERE -->
+<div style="text-align:center;margin-top:12px;background:#1a1a1a;border:2px solid #FFD700;border-radius:12px;padding:12px">
+<div style="color:#FFD700;font-size:12px;letter-spacing:1px">⏰ NEXT AUTO DIGIT IN</div>
+<div id="countdown" style="font-size:42px;font-weight:900;color:#FFD700;line-height:1.1">10s</div>
+<div style="width:100%;background:#333;height:8px;border-radius:10px;overflow:hidden;margin-top:6px"><div id="countBar" style="width:100%;height:100%;background:#FFD700"></div></div>
+<div id="autoinfo" style="font-size:11px;color:#aaa;margin-top:6px">Auto mode ON - New digit every 10 seconds</div>
+</div>
+
+<!-- COPY PASTE BUTTONS - YOU CAN SEE THEM HERE -->
+<button id="copyBtn" class="copyBtn" onclick="copyDigit()">📋 COPY DIGIT - TAP TO COPY</button>
+<button class="copyBtn2" onclick="copySignal()">📋 COPY SIGNAL - FOR WHATSAPP</button>
+<div id="copyMsg" style="text-align:center;color:#FFD700;font-size:13px;margin-top:6px;height:18px;font-weight:bold"></div>
+
+<div id="pr" style="text-align:center;margin-top:8px;color:#888"></div>
+
+<div style="display:flex;gap:8px;margin-top:12px">
+<div style="flex:1;background:#1a1a1a;border:1px solid #FFD700;padding:10px;border-radius:10px;text-align:center"><small style="color:#FFD700">YOUR DIGIT</small><div id="my" style="font-size:34px;color:#FFD700;font-weight:bold">-</div><small id="digitAge" style="color:#888">-</small></div>
+<div style="flex:1;background:#1a1a1a;padding:10px;border-radius:10px;text-align:center"><small>HITS / 100</small><div id="cnt" style="font-size:26px">-</div></div>
+<div style="flex:1;background:#1a1a1a;padding:10px;border-radius:10px;text-align:center"><small>LAST SEEN</small><div id="lastseen" style="font-size:16px">-</div></div>
+</div>
+
+<div style="margin-top:14px">
+<b style="color:#FFD700">🔴 LIVE DIGITS - LAST 20 TICKS</b>
+<div id="liveDigits" style="margin-top:8px;background:#000;border:1px solid #333;border-radius:10px;padding:8px;overflow:hidden;white-space:nowrap">Waiting...</div>
+<div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:4px"><span>← OLDEST</span><span>NEWEST →</span></div>
+</div>
+
+<div id="bars" style="margin-top:12px"></div>
+<div id="dots" style="margin-top:10px;line-height:32px"></div>
+</div>
+
+<!-- 4. SIGNAL HISTORY BOX -->
+<div class="box" style="border:1px solid #FFD700">
+<b style="color:#FFD700">SIGNAL HISTORY</b>
+<div id="history" style="margin-top:8px;font-size:13px;color:#aaa">No signals yet</div>
+</div>
+
+<p style="text-align:center;color:#FFD700;font-size:11px;margin:15px;font-weight:bold">derivscanner.ke • GOLD EDITION • Education only</p>
+
+<script>
+let digits=[], ws, market='R_75', myDigit=2, running=false, wins=0, losses=0, streak=0, countdown=10, autoTimer=null, digitBorn=Date.now();
+setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString()},1000);
+
+// ===== COPY PASTE =====
+function copyDigit(){
+  let text = String(myDigit);
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>showCopied()).catch(()=>fallbackCopy(text));
+  } else { fallbackCopy(text); }
+}
+function copySignal(){
+  let sig = 'derivscanner.ke | '+market+' | MATCHES '+myDigit+' | Next in '+countdown+'s';
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(sig).then(()=>{ document.getElementById('copyMsg').textContent='✅ SIGNAL COPIED: '+sig; setTimeout(()=>document.getElementById('copyMsg').textContent='',3000); });
+  } else { fallbackCopy(sig); }
+}
+function fallbackCopy(text){
+  let ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); showCopied(); }catch(e){ document.getElementById('copyMsg').textContent='Copy manually: '+text; }
+  document.body.removeChild(ta);
+}
+function showCopied(){
+  document.getElementById('copyMsg').textContent='✅ COPIED DIGIT '+myDigit+' - Now paste in Deriv!';
+  document.getElementById('copyBtn').textContent='✅ COPIED '+myDigit+'!';
+  if(navigator.vibrate) navigator.vibrate(100);
+  setTimeout(()=>{ document.getElementById('copyBtn').textContent='📋 COPY DIGIT '+myDigit+' - TAP TO COPY'; document.getElementById('copyMsg').textContent=''; },2500);
+}
+function updateCopyBtn(){ document.getElementById('copyBtn').textContent='📋 COPY DIGIT '+myDigit+' - TAP TO COPY'; }
+
+// ===== COUNTDOWN 10 SECONDS =====
+function startAuto(){
+  clearInterval(autoTimer);
+  countdown=10; digitBorn=Date.now();
+  autoTimer=setInterval(()=>{
+    if(!running) return;
+    if(!document.getElementById('auto').checked){
+      document.getElementById('countdown').textContent='OFF';
+      document.getElementById('countBar').style.width='0%';
+      document.getElementById('autoinfo').textContent='Auto mode OFF - manual digit';
+      return;
+    }
+    countdown--;
+    document.getElementById('countdown').textContent=countdown+'s';
+    document.getElementById('countBar').style.width=(countdown*10)+'%';
+    document.getElementById('digitAge').textContent='Age: '+Math.floor((Date.now()-digitBorn)/1000)+'s';
+    if(countdown<=0){
+      let old=myDigit;
+      do{ myDigit=Math.floor(Math.random()*10); }while(myDigit===old);
+      document.getElementById('mydigit').value=myDigit;
+      document.getElementById('my').textContent=myDigit;
+      digitBorn=Date.now(); countdown=10; updateCopyBtn();
+      document.getElementById('countBar').style.width='100%';
+      document.getElementById('sig').innerHTML='NEW DIGIT <span style=color:#FFD700>'+myDigit+'</span>';
+      document.getElementById('sig_info').textContent='Auto changed from '+old+' to '+myDigit+' - MATCHES '+myDigit;
+      document.getElementById('autoinfo').textContent='Changed: '+old+' → '+myDigit;
+      addHistory('🔄 AUTO DIGIT CHANGED: '+old+' → '+myDigit, '#FFD700');
+    }
+  },1000);
+}
+
+function randomDigit(){ myDigit=Math.floor(Math.random()*10); document.getElementById('mydigit').value=myDigit; document.getElementById('my').textContent=myDigit; digitBorn=Date.now(); countdown=10; updateCopyBtn(); document.getElementById('sig').innerHTML='MATCHES <span style=color:#FFD700>'+myDigit+'</span>'; document.getElementById('sig_info').textContent='Random.Last Digit = '+myDigit; }
+function start(){ market=document.getElementById('market').value; let v=parseInt(document.getElementById('mydigit').value); if(!isNaN(v))myDigit=v; else randomDigit(); running=true; digits=[]; wins=0; losses=0; streak=0; updateStats(); updateCopyBtn(); document.getElementById('sig').innerHTML='PILOT RUNNING: <span style=color:#FFD700>'+myDigit+'</span>'; startAuto(); connect(); }
+function stop(){ running=false; clearInterval(autoTimer); try{ws.close()}catch(e){} document.getElementById('sig').textContent='PILOT STOPPED'; document.getElementById('countdown').textContent='--'; }
+function updateStats(){ let total=wins+losses; document.getElementById('wins').textContent=wins; document.getElementById('losses').textContent=losses; document.getElementById('rate').textContent= total?Math.round(wins/total*100)+'%':'0%'; document.getElementById('streak').textContent=streak>0?'+'+streak:streak; }
+function connect(){
+  try{if(ws)ws.close()}catch(e){}
+  ws=new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
+  ws.onopen=()=>ws.send(JSON.stringify({ticks:market,subscribe:1}));
+  ws.onmessage=e=>{
+    let m=JSON.parse(e.data); if(!running) return;
+    if(m.msg_type=='tick' && m.tick){
+      let d=parseInt(String(m.tick.quote).slice(-1)); if(isNaN(d))return;
+      let prev=digits.length; digits.push(d); if(digits.length>100)digits.shift();
+      if(prev>0){ if(d===myDigit){ wins++; streak=streak>0?streak+1:1; addHistory('WIN - Digit '+d+' hit', '#FFD700'); } else { losses++; streak=streak<0?streak-1:-1; } updateStats(); }
+      let lastIndex=digits.lastIndexOf(myDigit); let age=lastIndex==-1?digits.length:digits.length-1-lastIndex;
+      let count=digits.filter(x=>x==myDigit).length;
+      document.getElementById('pr').innerHTML=market+': <b style=color:#FFD700>'+m.tick.quote+'</b> | Last Digit: '+d;
+      document.getElementById('my').textContent=myDigit;
+      document.getElementById('sig').innerHTML='MATCHES <span style=color:#FFD700>'+myDigit+'</span>';
+      document.getElementById('sig_info').textContent=(d===myDigit?'✅ LAST TICK WAS WIN - Digit '+d:'Last tick '+d+' - Waiting for '+myDigit);
+      document.getElementById('cnt').textContent=count+'x';
+      document.getElementById('lastseen').textContent=lastIndex==-1?'Never':age+' ago';
+      let cntAll=[0,0,0,0,0,0,0,0,0,0]; digits.forEach(v=>cntAll[v]++);
+      document.getElementById('bars').innerHTML=cntAll.map((v,i)=>`<div style=display:flex;align-items:center;margin:3px 0><span style=width:18px;font-weight:bold;color:${i==myDigit?'#FFD700':'#fff'}>${i}</span><div style=flex:1;background:#222;height:12px;border-radius:6px;overflow:hidden><div style=width:${v/Math.max(...cntAll,1)*100}%;height:100%;background:${i==myDigit?'#FFD700':'#555'}></div></div><span style=width:30px;text-align:right;margin-left:6px>${v}</span></div>`).join('');
+      let last20=digits.slice(-20);
+      document.getElementById('liveDigits').innerHTML=last20.map((x,idx)=>{ let isLast=idx===last20.length-1; let isMatch=x===myDigit; return `<span class=liveDigit style="${isLast?'background:#FFD700;color:#000;border:2px solid #fff':isMatch?'background:#FFD700;color:#000':'background:#1a1a1a;color:#fff'}">${x}</span>` }).join('');
+      document.getElementById('dots').innerHTML=digits.slice(-60).map(x=>`<span style=display:inline-block;width:23px;height:23px;line-height:23px;text-align:center;border-radius:50%;margin:2px;font-size:11px;background:${x==myDigit?'#FFD700':'#222'};color:${x==myDigit?'#000':'#fff'}>${x}</span>`).join('');
+    }
+  };
+  ws.onclose=()=>{ if(running) setTimeout(connect,1000) };
+  ws.onerror=()=>{ try{ws.close()}catch(e){}; if(running) setTimeout(connect,1000) };
+}
+function addHistory(t,c){ let h=document.getElementById('history'); if(h.textContent.includes('No signals'))h.innerHTML=''; h.innerHTML='<div style=color:'+c+'>'+new Date().toLocaleTimeString()+' - '+t+'</div>'+h.innerHTML; }
+</script>
+</body>
+</html>
