@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>derivscanner.ke - AUTO + MANUAL TRADE</title>
+<title>derivscanner.ke - MANUAL TRADE ONLY</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#fff;font-family:Arial;padding:10px}
@@ -14,8 +14,6 @@ body{background:#000;color:#fff;font-family:Arial;padding:10px}
 .btn{background:#FFD700;color:#000;font-weight:900;padding:14px;border:none;border-radius:10px;width:100%;font-size:16px;margin-top:8px}
 .btn2{background:#1a1a1a;color:#FFD700;border:1px solid #FFD700}
 .btnGreen{background:#00c853;color:#fff;font-weight:900;padding:16px;border:none;border-radius:12px;width:100%;font-size:18px}
-.btnAuto{background:#ff6d00;color:#fff;font-weight:900;padding:14px;border:none;border-radius:12px;width:100%;font-size:16px;margin-top:8px}
-.btnAuto.off{background:#333;color:#aaa}
 select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #FFD700;background:#1a1a1a;color:#fff;margin-top:6px;text-align:center;font-size:15px}
 .stat{display:flex;gap:8px}
 .stat div{flex:1;background:#1a1a1a;border:1px solid #333;padding:8px;border-radius:10px;text-align:center}
@@ -23,7 +21,6 @@ canvas{width:100%;height:220px;background:#0a0a0a;border:1px solid #FFD700;borde
 .digitBtn{width:42px;height:42px;border-radius:10px;border:1px solid #444;background:#1a1a1a;color:#fff;font-weight:900;font-size:18px}
 .digitBtn.sel{background:#FFD700;color:#000;border:2px solid #fff}
 .copyBtn{background:#FFD700;color:#000;font-weight:900;padding:12px;border:none;border-radius:10px;width:100%;margin-top:8px}
-.switch{display:flex;align-items:center;gap:10px;background:#1a1a1a;border:1px solid #FFD700;border-radius:10px;padding:10px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -31,7 +28,7 @@ canvas{width:100%;height:220px;background:#0a0a0a;border:1px solid #FFD700;borde
 <div class="top">
 <div style="font-size:32px">👑</div>
 <h1>deriv<span>scanner</span></h1>
-<p>AUTO + MANUAL TRADE • LIVE CHART • HOT DIGIT</p>
+<p>MANUAL TRADE ONLY • LIVE CHART • HOT DIGIT</p>
 <p id="clock" style="font-size:12px"></p>
 </div>
 
@@ -49,8 +46,8 @@ canvas{width:100%;height:220px;background:#0a0a0a;border:1px solid #FFD700;borde
 <!-- BALANCE -->
 <div class="box">
 <div style="display:flex;justify-content:space-between">
-<div><small style="color:#aaa">BALANCE</small><div id="balance" style="font-size:24px;font-weight:900;color:#FFD700">$0.00 DEMO</div><small id="autoStatus" style="color:#ff6d00">AUTO TRADE: OFF</small></div>
-<div style="text-align:right"><small style="color:#aaa">MARKET</small><div id="marketLabel" style="font-weight:bold">Volatility 75</div><small id="autoCount" style="color:#aaa">Auto trades: 0</small></div>
+<div><small style="color:#aaa">BALANCE</small><div id="balance" style="font-size:24px;font-weight:900;color:#FFD700">$0.00 DEMO</div></div>
+<div style="text-align:right"><small style="color:#aaa">MARKET</small><div id="marketLabel" style="font-weight:bold">Volatility 75</div></div>
 </div>
 <select id="market" onchange="changeMarket()">
 <option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75" selected>Volatility 75</option><option value="R_100">Volatility 100</option>
@@ -72,7 +69,7 @@ canvas{width:100%;height:220px;background:#0a0a0a;border:1px solid #FFD700;borde
 <div id="tradeAdvice" style="text-align:center;font-weight:900;padding:8px;border-radius:10px;background:#1a1a1a;color:#FFD700">WAIT - Collecting ticks...</div>
 <div id="sig" style="font-size:28px;font-weight:900;text-align:center;margin-top:8px">WAITING FOR HOT</div>
 <div style="text-align:center;margin-top:10px;background:#1a1a1a;border:1px solid #FFD700;border-radius:10px;padding:10px">
-<div style="color:#FFD700;font-size:11px">⏰ NEXT HOT CHECK / AUTO TRADE IN</div>
+<div style="color:#FFD700;font-size:11px">⏰ NEXT HOT CHECK IN</div>
 <div id="countdown" style="font-size:36px;font-weight:900;color:#FFD700">10s</div>
 <div style="width:100%;background:#333;height:8px;border-radius:10px;overflow:hidden"><div id="countBar" style="width:100%;height:100%;background:#FFD700"></div></div>
 </div>
@@ -86,46 +83,28 @@ canvas{width:100%;height:220px;background:#0a0a0a;border:1px solid #FFD700;borde
 <div id="bars" style="margin-top:10px"></div>
 </div>
 
-<!-- TRADE BOX - MANUAL + AUTO -->
+<!-- MANUAL TRADE ONLY -->
 <div class="box" style="border:2px solid #00c853">
-<b style="color:#00c853">💰 TRADE HERE - MANUAL + AUTO</b>
+<b style="color:#00c853">✋ MANUAL TRADE - YOU CONTROL EVERY TRADE</b>
+<p style="font-size:12px;color:#aaa;margin-top:4px">No auto trading. You choose digit, stake, duration, then BUY.</p>
 
-<!-- AUTO SETTINGS -->
-<div style="background:#1a1a1a;border:1px solid #ff6d00;border-radius:10px;padding:10px;margin-top:10px">
-<b style="color:#ff6d00">🤖 AUTO TRADE SETTINGS</b>
-<label class="switch"><input type="checkbox" id="autoTradeCheck" style="width:22px;height:22px" onchange="toggleAuto()"> <b>AUTO TRADE ON / OFF</b></label>
-<p style="font-size:11px;color:#aaa;margin-top:4px">When ON: Every 10 sec, if HOT is STRONG, website auto-buys HOT digit with Auto Stake below. When OFF: Only manual trades.</p>
-<div style="display:flex;gap:8px">
-<div style="flex:1"><small>AUTO STAKE ($)</small><input id="autoStake" type="number" value="0.35" min="0.35" step="0.1"></div>
-<div style="flex:1"><small>AUTO DURATION</small><select id="autoDuration"><option value="1">1 Tick</option><option value="5" selected>5 Ticks</option></select></div>
-</div>
-<div style="display:flex;gap:8px">
-<div style="flex:1"><small>MAX AUTO TRADES</small><input id="maxAuto" type="number" value="10"></div>
-<div style="flex:1"><small>STOP IF LOSS $</small><input id="stopLoss" type="number" value="5"></div>
-</div>
-<button id="autoBtn" class="btnAuto off" onclick="toggleAutoBtn()">🤖 AUTO TRADE: OFF - TAP TO START</button>
-<div id="autoInfo" style="text-align:center;font-size:12px;color:#aaa;margin-top:4px">Auto is OFF - Use manual below</div>
-</div>
-
-<!-- MANUAL SETTINGS -->
-<div style="background:#1a1a1a;border:1px solid #00c853;border-radius:10px;padding:10px;margin-top:10px">
-<b style="color:#00c853">✋ MANUAL TRADE</b>
-<div style="margin-top:8px"><b>1. CHOOSE DIGIT</b></div>
+<div style="margin-top:10px"><b>1. CHOOSE DIGIT TO TRADE</b></div>
 <div id="digitPicker" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-<div style="text-align:center;margin-top:6px">Selected: <b id="selectedDigit" style="color:#FFD700;font-size:22px">-</b> <button onclick="useHot()" style="background:#FFD700;color:#000;font-weight:900;border:none;padding:6px 12px;border-radius:8px;margin-left:8px">🔥 USE HOT</button></div>
+<div style="text-align:center;margin-top:6px">Selected Digit: <b id="selectedDigit" style="color:#FFD700;font-size:22px">-</b> <button onclick="useHot()" style="background:#FFD700;color:#000;font-weight:900;border:none;padding:6px 12px;border-radius:8px;margin-left:8px">🔥 USE HOT DIGIT</button></div>
+
 <div style="display:flex;gap:8px;margin-top:10px">
 <div style="flex:1"><b>2. STAKE ($)</b><input id="stake" type="number" value="1" min="0.35" step="0.1"></div>
-<div style="flex:1"><b>3. DURATION</b><select id="duration"><option value="1">1 Tick</option><option value="5" selected>5 Ticks</option><option value="10">10 Ticks</option></select></div>
+<div style="flex:1"><b>3. DURATION (Ticks)</b><select id="duration"><option value="1">1 Tick</option><option value="5" selected>5 Ticks</option><option value="10">10 Ticks</option></select></div>
 </div>
-<div style="margin-top:8px"><b>4. TYPE</b><select id="tradeType"><option value="MATCH">Matches</option><option value="DIFF">Differs</option></select></div>
+<div style="margin-top:8px"><b>4. TYPE</b><select id="tradeType"><option value="MATCH">Matches - Win if last digit = your digit</option><option value="DIFF">Differs - Win if last digit != your digit</option></select></div>
+
 <div style="display:flex;gap:8px;margin-top:10px">
-<div style="flex:1;background:#222;padding:8px;border-radius:10px;text-align:center"><small>PAYOUT</small><div id="payout" style="color:#00ff88;font-size:18px;font-weight:bold">$9.00</div></div>
-<div style="flex:1;background:#222;padding:8px;border-radius:10px;text-align:center"><small>PROFIT</small><div id="profit" style="color:#FFD700;font-size:18px;font-weight:bold">+$8.00</div></div>
-</div>
-<button class="btnGreen" onclick="placeTrade(true)">🚀 MANUAL BUY - MATCHES <span id="buyDigitLabel">-</span></button>
+<div style="flex:1;background:#1a1a1a;padding:8px;border-radius:10px;text-align:center"><small>PAYOUT IF WIN</small><div id="payout" style="color:#00ff88;font-size:18px;font-weight:bold">$9.00</div></div>
+<div style="flex:1;background:#1a1a1a;padding:8px;border-radius:10px;text-align:center"><small>PROFIT</small><div id="profit" style="color:#FFD700;font-size:18px;font-weight:bold">+$8.00</div></div>
 </div>
 
-<div id="tradeResult" style="text-align:center;margin-top:10px;font-weight:bold;min-height:20px"></div>
+<button class="btnGreen" onclick="placeTrade()">🚀 BUY NOW - MATCHES <span id="buyDigitLabel">-</span></button>
+<div id="tradeResult" style="text-align:center;margin-top:8px;font-weight:bold;min-height:20px"></div>
 </div>
 
 <!-- STATS -->
@@ -136,20 +115,17 @@ canvas{width:100%;height:220px;background:#0a0a0a;border:1px solid #FFD700;borde
 <div><small>WIN RATE</small><div id="rate" style="font-size:20px;font-weight:bold">0%</div></div>
 <div><small>PROFIT</small><div id="totalProfit" style="font-size:20px;font-weight:bold">$0</div></div>
 </div>
-<div style="display:flex;gap:8px;margin-top:8px">
-<div style="flex:1;background:#1a1a1a;padding:8px;border-radius:10px;text-align:center"><small>MANUAL TRADES</small><div id="manualCount" style="font-weight:bold">0</div></div>
-<div style="flex:1;background:#1a1a1a;padding:8px;border-radius:10px;text-align:center"><small>AUTO TRADES</small><div id="autoCount2" style="font-weight:bold">0</div></div>
-</div>
 </div>
 
 <div class="box">
 <b style="color:#FFD700">TRADE HISTORY</b>
 <div id="history" style="margin-top:8px;font-size:13px;color:#aaa">No trades yet</div>
 </div>
-<p style="text-align:center;color:#FFD700;font-size:11px;margin:15px">derivscanner.ke • AUTO + MANUAL • Education only - Trading is risky, use DEMO first</p>
+
+<p style="text-align:center;color:#FFD700;font-size:11px;margin:15px">derivscanner.ke • MANUAL ONLY • Education only - Trading is risky</p>
 
 <script>
-let digits=[], prices=[], ws=null, market='R_75', myDigit=null, selectedDigit=null, running=false, wins=0, losses=0, totalProfit=0, countdown=10, autoTimer=null, balance=1000, token='', lastPrice=0, openTrade=null, autoTradeOn=false, autoTrades=0, manualTrades=0, autoProfit=0;
+let digits=[], prices=[], ws=null, market='R_75', myDigit=null, selectedDigit=null, running=false, wins=0, losses=0, totalProfit=0, countdown=10, autoTimer=null, balance=1000, token='', lastPrice=0, openTrade=null;
 let canvas=document.getElementById('chart'), ctx=canvas.getContext('2d');
 setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString()},1000);
 document.getElementById('stake').addEventListener('input', updatePayout);
@@ -163,23 +139,44 @@ function updatePayout(){ let s=parseFloat(document.getElementById('stake').value
 updatePayout();
 function copyDigit(){ if(myDigit===null) return; navigator.clipboard.writeText(String(myDigit)).then(()=>{document.getElementById('copyMsg').textContent='✅ COPIED '+myDigit; setTimeout(()=>document.getElementById('copyMsg').textContent='',2000);}); }
 
-// AUTO TOGGLE
-function toggleAuto(){ autoTradeOn=document.getElementById('autoTradeCheck').checked; updateAutoUI(); }
-function toggleAutoBtn(){ document.getElementById('autoTradeCheck').checked=!document.getElementById('autoTradeCheck').checked; toggleAuto(); }
-function updateAutoUI(){
-  let btn=document.getElementById('autoBtn');
-  if(autoTradeOn){ btn.textContent='🤖 AUTO TRADE: ON - Auto-buying HOT digit'; btn.classList.remove('off'); btn.style.background='#00c853'; document.getElementById('autoStatus').textContent='AUTO TRADE: ON 🟢'; document.getElementById('autoStatus').style.color='#00ff88'; document.getElementById('autoInfo').textContent='Auto ON - Will auto-buy when HOT is STRONG'; }
-  else { btn.textContent='🤖 AUTO TRADE: OFF - TAP TO START'; btn.classList.add('off'); btn.style.background='#333'; document.getElementById('autoStatus').textContent='AUTO TRADE: OFF'; document.getElementById('autoStatus').style.color='#ff6d00'; document.getElementById('autoInfo').textContent='Auto is OFF - Use manual below'; }
-}
 function calcHot(){ if(digits.length<20) return null; let cnt=[0,0,0,0,0,0,0,0,0,0]; digits.forEach(v=>cnt[v]++); let max=Math.max(...cnt); let hot=cnt.indexOf(max); let second=[...cnt].sort((a,b)=>b-a)[1]; return {hot,max,strong:(max-second)>=3,cnt}; }
-function updateHot(){ let h=calcHot(); if(!h) return; myDigit=h.hot; document.getElementById('my').textContent=myDigit; document.getElementById('cnt').textContent=h.max+'x'; document.getElementById('lastseen').textContent=(digits.length-1-digits.lastIndexOf(myDigit))+' ago'; document.getElementById('sig').innerHTML='🔥 HOT MATCHES <span style=color:#FFD700>'+myDigit+'</span>'; document.getElementById('tradeAdvice').textContent=h.strong?'✅ TRADE NOW - HOT '+myDigit+' STRONG ('+h.max+' hits)':'⚠️ WAIT - Market balanced'; document.getElementById('tradeAdvice').style.color=h.strong?'#00ff88':'#FFD700'; document.getElementById('bars').innerHTML=h.cnt.map((v,i)=>`<div style=display:flex;align-items:center;margin:2px 0><span style=width:18px;color:${i==myDigit?'#FFD700':'#fff'}>${i}</span><div style=flex:1;background:#222;height:12px;border-radius:6px;overflow:hidden><div style=width:${v/Math.max(...h.cnt,1)*100}%;height:100%;background:${i==myDigit?'#FFD700':'#555'}></div></div><span style=width:30px;text-align:right;margin-left:6px>${v}</span></div>`).join(''); if(selectedDigit===null) selectDigit(myDigit); return h; }
+function updateHot(){ let h=calcHot(); if(!h) return; myDigit=h.hot; document.getElementById('my').textContent=myDigit; document.getElementById('cnt').textContent=h.max+'x'; document.getElementById('lastseen').textContent=(digits.length-1-digits.lastIndexOf(myDigit))+' ago'; document.getElementById('sig').innerHTML='🔥 HOT MATCHES <span style=color:#FFD700>'+myDigit+'</span>'; document.getElementById('tradeAdvice').textContent=h.strong?'✅ TRADE NOW - HOT '+myDigit+' STRONG ('+h.max+' hits)':'⚠️ WAIT - Market balanced'; document.getElementById('tradeAdvice').style.color=h.strong?'#00ff88':'#FFD700'; document.getElementById('bars').innerHTML=h.cnt.map((v,i)=>`<div style=display:flex;align-items:center;margin:2px 0><span style=width:18px;color:${i==myDigit?'#FFD700':'#fff'}>${i}</span><div style=flex:1;background:#222;height:12px;border-radius:6px;overflow:hidden><div style=width:${v/Math.max(...h.cnt,1)*100}%;height:100%;background:${i==myDigit?'#FFD700':'#555'}></div></div><span style=width:30px;text-align:right;margin-left:6px>${v}</span></div>`).join(''); if(selectedDigit===null) selectDigit(myDigit); }
 
 function drawChart(){ ctx.clearRect(0,0,canvas.width,canvas.height); if(prices.length<2) return; let min=Math.min(...prices), max=Math.max(...prices); if(min===max){min-=1;max+=1;} ctx.beginPath(); ctx.strokeStyle='#FFD700'; ctx.lineWidth=2; prices.slice(-50).forEach((p,i)=>{ let x=i/49*canvas.width; let y=canvas.height-((p-min)/(max-min))*(canvas.height-20)-10; if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke(); let last=prices[prices.length-1]; let y=canvas.height-((last-min)/(max-min))*(canvas.height-20)-10; ctx.beginPath(); ctx.fillStyle='#00ff88'; ctx.arc(canvas.width-4,y,5,0,Math.PI*2); ctx.fill(); }
+
 function connectDeriv(){ token=document.getElementById('token').value.trim(); market=document.getElementById('market').value; running=true; digits=[]; prices=[]; balance=1000; document.getElementById('connStatus').textContent=token?'Connecting with token...':'DEMO MODE - $1000 - No real money'; document.getElementById('connStatus').style.color='#00ff88'; document.getElementById('balance').textContent='$'+balance.toFixed(2)+' DEMO'; startAuto(); connectWS(); }
 function changeMarket(){ market=document.getElementById('market').value; document.getElementById('marketLabel').textContent=document.getElementById('market').selectedOptions[0].text; if(running) connectWS(); }
-function disconnect(){ running=false; autoTradeOn=false; document.getElementById('autoTradeCheck').checked=false; updateAutoUI(); clearInterval(autoTimer); try{ws.close()}catch(e){} document.getElementById('connStatus').textContent='Disconnected'; }
+function disconnect(){ running=false; clearInterval(autoTimer); try{ws.close()}catch(e){} document.getElementById('connStatus').textContent='Disconnected'; }
 
-function startAuto(){ clearInterval(autoTimer); countdown=10; autoTimer=setInterval(()=>{ if(!running) return; countdown--; document.getElementById('countdown').textContent=countdown+'s'; document.getElementById('countBar').style.width=(countdown*10)+'%'; if(countdown<=0){ let h=updateHot(); countdown=10; // AUTO TRADE CHECK EVERY 10 SEC
-  if(autoTradeOn && h && h.strong && !openTrade){ let maxAuto=parseInt(document.getElementById('maxAuto').value)||10; let stopLoss=parseFloat(document.getElementById('stopLoss').value)||5; if(autoTrades>=maxAuto){ document.getElementById('autoInfo').textContent='⛔ Auto stopped - Max trades reached'; autoTradeOn=false; document.getElementById('autoTradeCheck').checked=false; updateAutoUI(); } else if(totalProfit <= -stopLoss){ document.getElementById('autoInfo').textContent='⛔ Auto stopped - Stop Loss hit -$'+stopLoss; autoTradeOn=false; document.getElementById('autoTradeCheck').checked=false; updateAutoUI(); } else { placeTrade(false, h.hot); } } else if(autoTradeOn && h && !h.strong){ document.getElementById('autoInfo').textContent='Auto waiting - Hot not strong, skipped'; } } },1000); }
+function startAuto(){ clearInterval(autoTimer); countdown=10; autoTimer=setInterval(()=>{ if(!running) return; countdown--; document.getElementById('countdown').textContent=countdown+'s'; document.getElementById('countBar').style.width=(countdown*10)+'%'; if(countdown<=0){ updateHot(); countdown=10; } },1000); }
 
-function connectWS(){ try{if(ws)ws.close()}catch(e){} ws=new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089'); ws.onopen=()=>{ if(token) ws.send(JSON.stringify({authorize:token})); ws.send(JSON.stringify({ticks:market,subscribe:1})); if(token) ws.send(JSON.stringify({balance:1,subscribe:1})); }; ws.onmessage=e=>{ let m=JSON.parse(e.data); if(!running) return; if(m.msg_type==='authorize' && m.authorize){ document.getElementById('connStatus').textContent='✅ Connected - '+m.authorize.loginid; document.getElementById('balance').textContent='$'+m.authorize.balance+' REAL'; balance=parseFloat(m.authorize.balance); } if(m.msg_type==='balance' && m.balance){ balance=m.balance.balance; document.getElementById('balance').textContent='$'+balance.toFixed(2)+' REAL'; } if(m.msg_type==='tick' && m.tick){ let price=parseFloat(m.tick.quote); let d=parseInt(String(m.tick.quote).slice(-1)); if(isNaN(d))return; digits.push(d); prices.push(price); if(digits.length>100){digits.shift(); prices.shift();} document.getElementById('livePrice').textContent=price.toFixed(2); let dir=price>lastPrice?'▲ UP':price<lastPrice?'▼ DOWN':'• SAME'; let col=price>lastPrice?'#00ff88':price<lastPrice?'#ff4444':'#aaa'; document.getElementById('tickDir').textContent=dir; document.getElementById('tickDir').style.color=col; document.getElementById('bigDigit').textContent=d; document.getElementById('bigDigit').style.color=d===myDigit?'#00ff88':'#FFD700'; lastPrice=price; drawChart(); let stream=document.getElementById('tickStream'); stream.innerHTML=digits.slice(-25).map((x,idx)=>`<span style="min-width:32px;height:32px;line-height:32px;text-align:center;border-radius:8px;font-weight:900;background:${idx===digits.slice(-25).length-1?'#FFD700':x===myDigit?'#00ff88':'#1a1a1a'};color:${idx===digits.slice(-25).length-1||x===myDigit?'#000':'#fff'}">${x}</span>`).join(''); stream.scrollLeft=stream.scrollWidth; if(digits.length>=20) updateHot(); if(openTrade){ openTrade.ticksLeft--; if(d===openTrade.digit && openTrade.type==='MATCH') finishTrade(true,d); else if(d!==openTrade.digit && openTrade.type==='DIFF') finishTrade(true,d); else if(openTrade.ticksLeft<=0) finishTrade(false,d); else document.getElementById('tradeResult').textContent='⏳ '+(openTrade.isAuto?'🤖 AUTO':'✋ MANUAL')+' running... '+openTrade.ticksLeft+' ticks left - Last '+d; } } if(m.msg_t
+function connectWS(){ try{if(ws)ws.close()}catch(e){} ws=new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089'); ws.onopen=()=>{ if(token) ws.send(JSON.stringify({authorize:token})); ws.send(JSON.stringify({ticks:market,subscribe:1})); if(token) ws.send(JSON.stringify({balance:1,subscribe:1})); }; ws.onmessage=e=>{ let m=JSON.parse(e.data); if(!running) return; if(m.msg_type==='authorize' && m.authorize){ document.getElementById('connStatus').textContent='✅ Connected - '+m.authorize.loginid; document.getElementById('balance').textContent='$'+m.authorize.balance+' REAL'; balance=parseFloat(m.authorize.balance); } if(m.msg_type==='balance' && m.balance){ balance=m.balance.balance; document.getElementById('balance').textContent='$'+balance.toFixed(2)+' REAL'; } if(m.msg_type==='tick' && m.tick){ let price=parseFloat(m.tick.quote); let d=parseInt(String(m.tick.quote).slice(-1)); if(isNaN(d))return; digits.push(d); prices.push(price); if(digits.length>100){digits.shift(); prices.shift();} document.getElementById('livePrice').textContent=price.toFixed(2); let dir=price>lastPrice?'▲ UP':price<lastPrice?'▼ DOWN':'• SAME'; let col=price>lastPrice?'#00ff88':price<lastPrice?'#ff4444':'#aaa'; document.getElementById('tickDir').textContent=dir; document.getElementById('tickDir').style.color=col; document.getElementById('bigDigit').textContent=d; document.getElementById('bigDigit').style.color=d===myDigit?'#00ff88':'#FFD700'; lastPrice=price; drawChart(); let stream=document.getElementById('tickStream'); stream.innerHTML=digits.slice(-25).map((x,idx)=>`<span style="min-width:32px;height:32px;line-height:32px;text-align:center;border-radius:8px;font-weight:900;background:${idx===digits.slice(-25).length-1?'#FFD700':x===myDigit?'#00ff88':'#1a1a1a'};color:${idx===digits.slice(-25).length-1||x===myDigit?'#000':'#fff'}">${x}</span>`).join(''); stream.scrollLeft=stream.scrollWidth; if(digits.length>=20) updateHot(); if(openTrade){ openTrade.ticksLeft--; if(d===openTrade.digit && openTrade.type==='MATCH') finishTrade(true,d); else if(d!==openTrade.digit && openTrade.type==='DIFF') finishTrade(true,d); else if(openTrade.ticksLeft<=0) finishTrade(false,d); else document.getElementById('tradeResult').textContent='⏳ Manual trade running... '+openTrade.ticksLeft+' ticks left - Last digit '+d; } } if(m.msg_type==='buy' && m.buy){ document.getElementById('tradeResult').textContent='✅ Real trade placed in Deriv! ID: '+m.buy.contract_id; } }; ws.onclose=()=>{ if(running) setTimeout(connectWS,1000); }; }
+
+function placeTrade(){
+  if(!running){ alert('Press CONNECT first'); return; }
+  if(selectedDigit===null){ alert('Choose digit first'); return; }
+  if(openTrade){ alert('Wait - trade already running'); return; }
+  let stake=parseFloat(document.getElementById('stake').value)||1;
+  let dur=parseInt(document.getElementById('duration').value);
+  let type=document.getElementById('tradeType').value;
+  if(token && ws && ws.readyState===1){
+    ws.send(JSON.stringify({buy:1, price:stake, parameters:{amount:stake, basis:'stake', contract_type: type==='MATCH'?'DIGITMATCH':'DIGITDIFF', currency:'USD', duration:dur, duration_unit:'t', symbol:market, barrier:String(selectedDigit)}}));
+    document.getElementById('tradeResult').textContent='⏳ Sending REAL trade to Deriv... Matches '+selectedDigit+' $'+stake;
+    return;
+  }
+  balance-=stake; document.getElementById('balance').textContent='$'+balance.toFixed(2)+' DEMO';
+  openTrade={digit:selectedDigit, type:type, stake:stake, ticksLeft:dur};
+  document.getElementById('tradeResult').textContent='⏳ DEMO Trade running... Matches '+selectedDigit+' $'+stake+' - '+dur+' ticks';
+  addHistory('✋ MANUAL BUY Matches '+selectedDigit+' $'+stake+' - '+dur+' ticks', '#FFD700');
+}
+function finishTrade(won, lastDigit){
+  let stake=openTrade.stake; let payout=openTrade.type==='MATCH'?stake*9:stake*1.11;
+  if(won){ balance+=payout; totalProfit+=(payout-stake); wins++; document.getElementById('tradeResult').innerHTML='<span style=color:#00ff88>✅ WIN! Last digit '+lastDigit+' +$'+(payout-stake).toFixed(2)+'</span>'; addHistory('✅ WIN Matches '+openTrade.digit+' Last '+lastDigit+' +$'+(payout-stake).toFixed(2), '#00ff88'); }
+  else { totalProfit-=stake; losses++; document.getElementById('tradeResult').innerHTML='<span style=color:#ff4444>❌ LOSS! Last digit '+lastDigit+' -$'+stake.toFixed(2)+'</span>'; addHistory('❌ LOSS Matches '+openTrade.digit+' Last '+lastDigit+' -$'+stake.toFixed(2), '#ff4444'); }
+  openTrade=null; document.getElementById('balance').textContent='$'+balance.toFixed(2)+' '+(token?'REAL':'DEMO');
+  let tot=wins+losses; document.getElementById('wins').textContent=wins; document.getElementById('losses').textContent=losses; document.getElementById('rate').textContent=tot?Math.round(wins/tot*100)+'%':'0%'; document.getElementById('totalProfit').textContent='$'+totalProfit.toFixed(2);
+}
+function addHistory(t,c){ let h=document.getElementById('history'); if(h.textContent.includes('No trades'))h.innerHTML=''; h.innerHTML='<div style=color:'+c+'>'+new Date().toLocaleTimeString()+' - '+t+'</div>'+h.innerHTML; }
+</script>
+</body>
+</html>
